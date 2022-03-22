@@ -184,3 +184,8 @@ func (c *Client) Position() (float64, error) {
 func (c *Client) PercentPosition() (float64, error) {
 	return c.GetFloatProperty("percent-pos")
 }
+
+// Remaining length of the file in seconds. Note that the file duration is not always exactly known, so this is an estimate.
+func (c *Client) PlayBack_Time() (float64, error) {
+	return c.GetFloatProperty("time-remaining")
+}
