@@ -7,8 +7,11 @@ import (
 	"io"
 	"math/rand"
 	"net"
+	"runtime"
 	"sync"
 	"time"
+
+	"github.com/natefinch/npipe"
 )
 
 // Response received from mpv. Can be an event or a user requested response.
@@ -78,7 +81,13 @@ func (c *IPCClient) dispatch(resp *Response) {
 }
 
 func (c *IPCClient) run() {
-	conn, err := net.Dial("unix", c.socket)
+	var conn io.ReadWriter
+	var err error
+	if runtime.GOOS == "windows" {
+		conn, err = npipe.Dial(c.socket)
+	} else {
+		conn, err = net.Dial("unix", c.socket)
+	}
 	if err != nil {
 		panic(err)
 	}
